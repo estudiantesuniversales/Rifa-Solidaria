@@ -5,19 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rifa Solidaria</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin:0; padding:0; }
 body { font-family: Arial, sans-serif; background: #357272; color:#1a1a1a; }
 
 /* HEADER */
-.header { background: #006666; color: white; text-align: center; padding: 2rem 1rem; }
+.header { background: #006666; color: white; text-align:center; padding:2rem 1rem; }
 
 /* CONTAINER */
-.container { max-width: 700px; margin: auto; padding: 1rem; }
+.container { max-width: 700px; margin:auto; padding:1rem; }
 
 /* HISTORIA */
 .historia { background:#ffffff; border-radius:12px; padding:1rem; margin-bottom:1rem; display:flex; gap:1rem; }
 .historia img { width:90px; height:90px; border-radius:50%; object-fit:cover; border:2px solid #1D8787; }
 .historia-texto h2 { color: #006666; margin-bottom:5px; }
+.historia-texto p { font-size:14px; color:#004d4d; }
 
 /* PREMIO */
 .premio-box { background:#ffffff; border-radius:12px; padding:1rem; margin-bottom:1rem; border:1px solid #1D8787; text-align:center; }
@@ -26,7 +27,7 @@ body { font-family: Arial, sans-serif; background: #357272; color:#1a1a1a; }
 
 /* STATS */
 .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:1rem 0; }
-.stat-card { background:#ffffff; padding:10px; border-radius:10px; text-align:center; color: #165c5c; font-weight:600; border:1px solid #0a4e4e; }
+.stat-card { background:#ffffff; padding:10px; border-radius:10px; text-align:center; color:#165c5c; font-weight:600; border:1px solid #0a4e4e; }
 
 /* LEYENDA */
 .leyenda { display:flex; gap:15px; justify-content:center; margin:1rem 0; }
@@ -45,13 +46,14 @@ body { font-family: Arial, sans-serif; background: #357272; color:#1a1a1a; }
 .num-btn.libre:hover { background:#b0f0b8; }
 
 /* MODAL */
-.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items:center; justify-content:center; z-index:1000;}
+.modal-bg { position: fixed; inset:0; background: rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1000;}
 .modal-bg.open { display:flex; }
 .modal { background:white; padding:20px; border-radius:12px; width:90%; max-width:320px; }
 input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; border-radius:6px; }
 .btn { padding:10px; border:none; border-radius:8px; cursor:pointer; }
 .btn-primary { background: #101414; color:white; }
-.tzadaka { text-align:center; margin-top:2rem; font-style:italic; color: #000000 font-size:20px; }
+.tzadaka { text-align:center; margin-top:2rem; font-style:italic; color:#000000; font-size:16px; }
+
 </style>
 </head>
 <body>
@@ -74,8 +76,9 @@ input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; b
 
   <!-- PREMIO -->
   <div class="premio-box">
-    <h3>🎁 Premio de la rifa</h3>
-    <p>Smart TV 43 pulgadas o equivalente en efectivo</p>
+    <h3>🎁 Premios de la rifa</h3>
+    <p>Libro: EL TIKUN del Rabí Najmán</p>
+    <p>Libro: EL ABC DE LA VIDA. Consejos prácticos para vivir mejor del Rab. Shalom Arush</p>
   </div>
 
   <!-- STATS -->
@@ -113,74 +116,75 @@ input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; b
   </div>
 </div>
 
-<!-- MODAL FINAL -->
-<div class="modal-bg" id="finalModal">
-  <div class="modal" style="text-align:center;">
-    <h2>✅ Número reservado</h2>
-    <p>Ahora enviá el comprobante por mail</p>
-    <a id="finalMailLink" href="#" style="display:block;margin-top:10px;background:#1D8787;color:white;padding:10px;border-radius:8px;text-decoration:none;">📧 Abrir mail</a>
-    <button onclick="cerrarFinal()" style="margin-top:10px;padding:8px;width:100%;border:none;border-radius:8px;background:#ccc;cursor:pointer;">Cerrar</button>
-    <p style="margin-top:10px;font-size:12px;">Si no se abre, enviá manualmente a:<br><b>TUEMAIL@gmail.com</b></p>
-  </div>
-</div>
-
 <script>
 const PRECIO = 5000;
 const TOTAL = 100;
 const estados = {};
-for(let i=1;i<=TOTAL;i++) estados[i]='libre';
+for(let i=1;i<=TOTAL;i++) estados[i]='libre'; // Todos los números libres
 let seleccionado = null;
 
 function renderGrid(){
   const grid = document.getElementById('grid');
   grid.innerHTML='';
-  let vendidos=0,reservados=0;
+  let vendidos=0, reservados=0;
   for(let i=1;i<=TOTAL;i++){
     const btn=document.createElement('button');
-    const est=estados[i];
-    btn.className='num-btn '+est;
-    btn.textContent=i;
+    const est = estados[i];
+    btn.className = 'num-btn '+est;
+    btn.textContent = i;
     btn.title = `Número ${i} — ${est.charAt(0).toUpperCase() + est.slice(1)}`;
-    if(est==='libre') btn.onclick=()=>abrirModal(i);
+    if(est==='libre') btn.onclick = ()=>abrirModal(i);
     grid.appendChild(btn);
     if(est==='vendido') vendidos++;
     if(est==='reservado') reservados++;
   }
-  document.getElementById('vendidos').textContent=vendidos;
-  document.getElementById('disponibles').textContent=TOTAL-vendidos-reservados;
-  document.getElementById('recaudado').textContent='$'+(vendidos*PRECIO);
+  document.getElementById('vendidos').textContent = vendidos;
+  document.getElementById('disponibles').textContent = TOTAL - vendidos - reservados;
+  document.getElementById('recaudado').textContent = '$'+(vendidos*PRECIO);
 }
 
 function abrirModal(num){
-  seleccionado=num;
-  document.getElementById('modal-titulo').textContent="Número "+num;
+  seleccionado = num;
+  document.getElementById('modal-titulo').textContent = "Número "+num;
   document.getElementById('modal').classList.add('open');
 }
 
 function cerrarModal(){ document.getElementById('modal').classList.remove('open'); }
 
 function confirmarAccion(){
-  const nombre=document.getElementById('nombre').value;
-  const email=document.getElementById('email').value;
-  if(!nombre||!email){ alert("Completá los datos"); return; }
+  const nombre = document.getElementById('nombre').value;
+  const email = document.getElementById('email').value;
+  if(!nombre || !email){ alert("Completá los datos"); return; }
 
-  estados[seleccionado]='reservado';
-  renderGrid();
-  cerrarModal();
+  // Enviar a Google Sheets
+  const payload = {
+    numero: seleccionado,
+    nombre: nombre,
+    email: email
+  };
 
-  const asunto="Rifa Solidaria";
-  const mensaje=`Hola, reservé el número ${seleccionado}.\nNombre: ${nombre}`;
-  const mailLink=`mailto: estudiantesuniversales@gmail.com?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(mensaje)}`;
-
-  const finalModal=document.getElementById('finalModal');
-  document.getElementById('finalMailLink').href=mailLink;
-  finalModal.classList.add('open');
+  fetch("https://script.google.com/macros/s/AKfycbyJInDbm6WQUX1LdjRkSjmCvUtsPitOwyYQFvd-1jf1tUXspzr3Isj0r1_0CtsShGRH/exec
+, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status === "ok"){
+      estados[seleccionado] = 'reservado';
+      renderGrid();
+      cerrarModal();
+      alert("Número reservado correctamente");
+    } else {
+      alert(data.msg);
+    }
+  })
+  .catch(err => alert("Error al reservar: "+err));
 }
 
-function cerrarFinal(){ document.getElementById('finalModal').classList.remove('open'); }
-
-document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal') cerrarModal();});
-document.getElementById('finalModal').addEventListener('click',e=>{if(e.target.id==='finalModal') cerrarFinal();});
+document.getElementById('modal').addEventListener('click', e=>{
+  if(e.target.id==='modal') cerrarModal();
+});
 
 renderGrid();
 </script>
