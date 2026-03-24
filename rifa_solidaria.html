@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rifa Solidaria</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #357272; color:#1a1a1a; }
+
+/* HEADER */
+.header { background: #006666; color: white; text-align: center; padding: 2rem 1rem; }
+
+/* CONTAINER */
+.container { max-width: 700px; margin: auto; padding: 1rem; }
+
+/* HISTORIA */
+.historia { background:#ffffff; border-radius:12px; padding:1rem; margin-bottom:1rem; display:flex; gap:1rem; }
+.historia img { width:90px; height:90px; border-radius:50%; object-fit:cover; border:2px solid #1D8787; }
+.historia-texto h2 { color: #006666; margin-bottom:5px; }
+
+/* PREMIO */
+.premio-box { background:#ffffff; border-radius:12px; padding:1rem; margin-bottom:1rem; border:1px solid #1D8787; text-align:center; }
+.premio-box h3 { color: #006666; margin-bottom:5px; }
+.premio-box p { font-size:13px; color: #006666; }
+
+/* STATS */
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:1rem 0; }
+.stat-card { background:#ffffff; padding:10px; border-radius:10px; text-align:center; color: #165c5c; font-weight:600; border:1px solid #0a4e4e; }
+
+/* LEYENDA */
+.leyenda { display:flex; gap:15px; justify-content:center; margin:1rem 0; }
+.leyenda-item { display:flex; align-items:center; gap:6px; font-size:13px; color:#1a1a1a; }
+.dot { width:16px; height:16px; border-radius:50%; flex-shrink:0; border:1px solid #999; }
+.dot-libre { background:#d4f7dc; border-color:#006666; }
+.dot-reservado { background:#1D8787; }
+.dot-vendido { background:#005050; }
+
+/* GRID */
+.grid { display:grid; grid-template-columns:repeat(10,1fr); gap:6px; }
+.num-btn { aspect-ratio:1; border-radius:8px; border:1px solid #1D8787; cursor:pointer; font-weight:600; }
+.num-btn.libre { background:#d4f7dc; color:#006666; }
+.num-btn.reservado { background:#1D8787; color:white; }
+.num-btn.vendido { background:#005050; color:white; }
+.num-btn.libre:hover { background:#b0f0b8; }
+
+/* MODAL */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items:center; justify-content:center; z-index:1000;}
+.modal-bg.open { display:flex; }
+.modal { background:white; padding:20px; border-radius:12px; width:90%; max-width:320px; }
+input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; border-radius:6px; }
+.btn { padding:10px; border:none; border-radius:8px; cursor:pointer; }
+.btn-primary { background: #101414; color:white; }
+.tzadaka { text-align:center; margin-top:2rem; font-style:italic; color: #000000 font-size:20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🤍 ESTUDIANTES UNIVERSALES - Rifa Solidaria</h1>
+  <p>Cada número vale $5000 (en pesos argentinos)</p>
+</div>
+
+<div class="container">
+
+  <!-- HISTORIA -->
+  <div class="historia">
+    <img src="foto.jpg" alt="Beneficiado">
+    <div class="historia-texto">
+      <h2>Nombre del beneficiado</h2>
+      <p>Acá podés contar la historia, qué necesita la persona y en qué se usarán los fondos recaudados.</p>
+    </div>
+  </div>
+
+  <!-- PREMIO -->
+  <div class="premio-box">
+    <h3>🎁 Premio de la rifa</h3>
+    <p>Smart TV 43 pulgadas o equivalente en efectivo</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">Total<br><b id="total">100</b></div>
+    <div class="stat-card">Disponibles<br><b id="disponibles">100</b></div>
+    <div class="stat-card">Vendidos<br><b id="vendidos">0</b></div>
+    <div class="stat-card">Recaudado<br><b id="recaudado">$0</b></div>
+  </div>
+
+  <!-- LEYENDA -->
+  <div class="leyenda">
+    <div class="leyenda-item"><div class="dot dot-libre"></div> Libre</div>
+    <div class="leyenda-item"><div class="dot dot-reservado"></div> Reservado</div>
+    <div class="leyenda-item"><div class="dot dot-vendido"></div> Vendido</div>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid" id="grid"></div>
+
+  <!-- FRASE TZADAKÁ -->
+  <p class="tzadaka">“Quien da Tzadaká nunca lo pierde; bendición y justicia van siempre con él.”</p>
+
+</div>
+
+<!-- MODAL RESERVA -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h2 id="modal-titulo"></h2>
+    <p>Completá tus datos:</p>
+    <input type="text" id="nombre" placeholder="Tu nombre">
+    <input type="email" id="email" placeholder="Tu email">
+    <button class="btn" onclick="cerrarModal()">Cancelar</button>
+    <button class="btn btn-primary" onclick="confirmarAccion()">Reservar</button>
+  </div>
+</div>
+
+<!-- MODAL FINAL -->
+<div class="modal-bg" id="finalModal">
+  <div class="modal" style="text-align:center;">
+    <h2>✅ Número reservado</h2>
+    <p>Ahora enviá el comprobante por mail</p>
+    <a id="finalMailLink" href="#" style="display:block;margin-top:10px;background:#1D8787;color:white;padding:10px;border-radius:8px;text-decoration:none;">📧 Abrir mail</a>
+    <button onclick="cerrarFinal()" style="margin-top:10px;padding:8px;width:100%;border:none;border-radius:8px;background:#ccc;cursor:pointer;">Cerrar</button>
+    <p style="margin-top:10px;font-size:12px;">Si no se abre, enviá manualmente a:<br><b>TUEMAIL@gmail.com</b></p>
+  </div>
+</div>
+
+<script>
+const PRECIO = 5000;
+const TOTAL = 100;
+const estados = {};
+for(let i=1;i<=TOTAL;i++) estados[i]='libre';
+estados[2]='vendido';
+estados[5]='reservado';
+let seleccionado = null;
+
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML='';
+  let vendidos=0,reservados=0;
+  for(let i=1;i<=TOTAL;i++){
+    const btn=document.createElement('button');
+    const est=estados[i];
+    btn.className='num-btn '+est;
+    btn.textContent=i;
+    btn.title = `Número ${i} — ${est.charAt(0).toUpperCase() + est.slice(1)}`;
+    if(est==='libre') btn.onclick=()=>abrirModal(i);
+    grid.appendChild(btn);
+    if(est==='vendido') vendidos++;
+    if(est==='reservado') reservados++;
+  }
+  document.getElementById('vendidos').textContent=vendidos;
+  document.getElementById('disponibles').textContent=TOTAL-vendidos-reservados;
+  document.getElementById('recaudado').textContent='$'+(vendidos*PRECIO);
+}
+
+function abrirModal(num){
+  seleccionado=num;
+  document.getElementById('modal-titulo').textContent="Número "+num;
+  document.getElementById('modal').classList.add('open');
+}
+
+function cerrarModal(){ document.getElementById('modal').classList.remove('open'); }
+
+function confirmarAccion(){
+  const nombre=document.getElementById('nombre').value;
+  const email=document.getElementById('email').value;
+  if(!nombre||!email){ alert("Completá los datos"); return; }
+
+  estados[seleccionado]='reservado';
+  renderGrid();
+  cerrarModal();
+
+  const asunto="Rifa Solidaria";
+  const mensaje=`Hola, reservé el número ${seleccionado}.\nNombre: ${nombre}`;
+  const mailLink=`mailto: estudiantesuniversales@gmail.com?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(mensaje)}`;
+
+  const finalModal=document.getElementById('finalModal');
+  document.getElementById('finalMailLink').href=mailLink;
+  finalModal.classList.add('open');
+}
+
+function cerrarFinal(){ document.getElementById('finalModal').classList.remove('open'); }
+
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal') cerrarModal();});
+document.getElementById('finalModal').addEventListener('click',e=>{if(e.target.id==='finalModal') cerrarFinal();});
+
+renderGrid();
+</script>
+
+</body>
+</html>
