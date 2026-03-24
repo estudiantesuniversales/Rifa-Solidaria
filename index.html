@@ -57,8 +57,9 @@ input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; b
 </div>
 
 <div class="premio-box">
-<h3>🎁 Premio de la rifa</h3>
-<p>Smart TV 43 pulgadas o equivalente en efectivo</p>
+<h3>🎁 Premios de la rifa</h3>
+<p>Libro: EL ABC DE LA VIDA. Consejos prácticos para vivir mejor. Rab. Shalom Arush</p>
+<p>Libro: EL TIKUN. Rabí Najmán</p>
 </div>
 
 <div class="stats">
@@ -133,7 +134,8 @@ if(!nombre||!email){alert("Completá los datos"); return;}
 
 // Enviar a Google Sheets
 const payload={numero:seleccionado,nombre:nombre,email:email};
-fetch("AQUÍ_VA_TU_URL_DE_APPS_SCRIPT",{
+fetch("https://script.google.com/macros/s/AKfycbyJInDbm6WQUX1LdjRkSjmCvUtsPitOwyYQFvd-1jf1tUXspzr3Isj0r1_0CtsShGRH/exec
+",{
 method:"POST",
 body:JSON.stringify(payload)
 })
