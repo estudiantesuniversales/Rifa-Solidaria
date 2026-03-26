@@ -30,30 +30,37 @@ body { font-family: Arial, sans-serif; background: #357272; color:#1a1a1a; }
 .dot-vendido { background:#005050; }
 
 .grid { display:grid; grid-template-columns:repeat(10,1fr); gap:6px; margin-bottom:1rem; }
-.num-btn { aspect-ratio:1; border-radius:8px; border:1px solid #1D8787; cursor:pointer; font-weight:600; }
+.num-btn { aspect-ratio:1; border-radius:8px; border:1px solid #1D8787; cursor:pointer; font-weight:600; font-size:13px; }
 .num-btn.libre { background:#d4f7dc; color:#006666; }
 .num-btn.reservado { background:#1D8787; color:white; cursor:default; }
 .num-btn.vendido { background:#005050; color:white; cursor:default; }
 .num-btn.libre:hover { background:#b0f0b8; }
 
-.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items:center; justify-content:center; z-index:1000; }
+.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1000; }
 .modal-bg.open { display:flex; }
 .modal { background:white; padding:20px; border-radius:12px; width:90%; max-width:320px; }
-input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; border-radius:6px; }
-.btn { padding:10px; border:none; border-radius:8px; cursor:pointer; }
-.btn-primary { background: #101414; color:white; }
-.tzadaka { text-align:center; margin-top:2rem; font-style:italic; color: #000000; font-size:20px; }
+.modal h2 { margin-bottom:10px; color:#006666; }
+.modal p { margin-bottom:10px; }
+input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; border-radius:6px; font-size:14px; }
+.btn { padding:10px 16px; border:none; border-radius:8px; cursor:pointer; font-size:14px; }
+.btn-cancelar { background:#ccc; }
+.btn-primary { background:#101414; color:white; }
+.btn-row { display:flex; gap:10px; }
+.btn-row .btn { flex:1; }
+
+.tzadaka { text-align:center; margin-top:2rem; font-style:italic; color:#000000; font-size:20px; padding-bottom:2rem; }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>🤍 ESTUDIANTES UNIVERSALES - Rifa Solidaria</h1>
+  <h1>🤍 Rifa Solidaria</h1>
   <p>Cada número vale $5000 (en pesos argentinos)</p>
 </div>
 
 <div class="container">
 
+  <!-- ✏️ CAMBIÁ: foto, nombre y descripción del beneficiado -->
   <div class="historia">
     <img src="foto.jpg" alt="Beneficiado">
     <div class="historia-texto">
@@ -62,6 +69,7 @@ input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; b
     </div>
   </div>
 
+  <!-- ✏️ CAMBIÁ: descripción del premio -->
   <div class="premio-box">
     <h3>🎁 Premio de la rifa</h3>
     <p>Libro: EL ABC DE LA VIDA. Consejos prácticos para vivir mejor. Rab. Shalom Arush</p>
@@ -71,7 +79,7 @@ input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; b
   <div class="stats">
     <div class="stat-card">Total<br><b id="total">100</b></div>
     <div class="stat-card">Disponibles<br><b id="disponibles">100</b></div>
-    <div class="stat-card">Vendidos<br><b id="vendidos">0</b></div>
+    <div class="stat-card">Reservados<br><b id="reservados">0</b></div>
     <div class="stat-card">Recaudado<br><b id="recaudado">$0</b></div>
   </div>
 
@@ -90,11 +98,14 @@ input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; b
 <!-- MODAL RESERVA -->
 <div class="modal-bg" id="modal">
   <div class="modal">
-    <h2 id="modal-titulo"></h2>
-    <p style="margin-bottom:10px;">Completá tus datos:</p>
-    <input type="email" id="email" placeholder="Tu email">
-    <button class="btn" onclick="cerrarModal()">Cancelar</button>
-    <button class="btn btn-primary" onclick="confirmarAccion()">Reservar</button>
+    <h2 id="modal-titulo">Número X</h2>
+    <p>Completá tus datos:</p>
+    <input type="text"  id="nombre" placeholder="Tu nombre completo">
+    <input type="email" id="email"  placeholder="Tu email">
+    <div class="btn-row">
+      <button class="btn btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary"  onclick="confirmarAccion()">Reservar</button>
+    </div>
   </div>
 </div>
 
@@ -105,19 +116,23 @@ input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; b
     <p>Ahora enviá el comprobante por mail</p>
     <a id="finalMailLink" href="#" style="display:block;margin-top:10px;background:#1D8787;color:white;padding:10px;border-radius:8px;text-decoration:none;">📧 Abrir mail</a>
     <button onclick="cerrarFinal()" style="margin-top:10px;padding:8px;width:100%;border:none;border-radius:8px;background:#ccc;cursor:pointer;">Cerrar</button>
-    <p style="margin-top:10px;font-size:12px;">Si no se abre, enviá manualmente a:<br><b>TUEMAIL@gmail.com</b></p>
+    <!-- ✏️ CAMBIÁ: tu email -->
+    <p style="margin-top:10px;font-size:12px;">Si no se abre, enviá manualmente a:<br><b>estudiantesuniversales@gmail.com</b></p>
   </div>
 </div>
 
 <script>
+// ✏️ CAMBIÁ: tu URL de Apps Script
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7DoXjGR0AK9btLrmIPcUlQpD-t75b4anACUbOXHyUn7gSRcZv1Tl64yCNjyMsoUXZ/exec";
-const TOTAL = 100;
+const TOTAL  = 100;
 const PRECIO = 5000;
+
 const estados = {};
 let seleccionado = null;
 
 for (let i = 1; i <= TOTAL; i++) estados[i] = 'libre';
 
+// Cargar estados desde Google Sheets
 fetch(SCRIPT_URL)
   .then(res => res.json())
   .then(data => {
@@ -135,26 +150,29 @@ function renderGrid() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
   let vendidos = 0, reservados = 0;
+
   for (let i = 1; i <= TOTAL; i++) {
     const btn = document.createElement('button');
-    const est = estados[i];
-    btn.className = 'num-btn ' + est;
+    const est = estados[i] || 'libre';
+    btn.className   = 'num-btn ' + est;
     btn.textContent = i;
     btn.title = `Número ${i} — ${est.charAt(0).toUpperCase() + est.slice(1)}`;
     if (est === 'libre') btn.onclick = () => abrirModal(i);
     grid.appendChild(btn);
-    if (est === 'vendido') vendidos++;
+    if (est === 'vendido')   vendidos++;
     if (est === 'reservado') reservados++;
   }
-  document.getElementById('vendidos').textContent = vendidos;
+
+  document.getElementById('reservados').textContent  = reservados;
   document.getElementById('disponibles').textContent = TOTAL - vendidos - reservados;
-  document.getElementById('recaudado').textContent = '$' + (vendidos * PRECIO).toLocaleString('es-AR');
+  document.getElementById('recaudado').textContent   = '$' + (vendidos * PRECIO).toLocaleString('es-AR');
 }
 
 function abrirModal(num) {
   seleccionado = num;
-  document.getElementById('modal-titulo').textContent = "Número " + num;
-  document.getElementById('email').value = '';
+  document.getElementById('modal-titulo').textContent = 'Número ' + num;
+  document.getElementById('nombre').value = '';
+  document.getElementById('email').value  = '';
   document.getElementById('modal').classList.add('open');
 }
 
@@ -163,9 +181,9 @@ function cerrarModal() {
 }
 
 function confirmarAccion() {
-  const email = document.getElementById('email').value.trim();
   const nombre = document.getElementById('nombre').value.trim();
-  if (!nombre || !email) { alert("Completá los datos"); return; }
+  const email  = document.getElementById('email').value.trim();
+  if (!nombre || !email) { alert("Completá nombre y email"); return; }
 
   estados[seleccionado] = 'reservado';
   renderGrid();
@@ -175,32 +193,22 @@ function confirmarAccion() {
     numero: seleccionado,
     estado: 'reservado',
     nombre: nombre,
-    mail: email,
-    fecha: new Date().toLocaleString('es-AR')
+    mail:   email,
+    fecha:  new Date().toLocaleString('es-AR')
   });
 
   fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
+    method:  'POST',
+    mode:    'no-cors',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString()
-  }).catch(err => console.error("Error:", err));
+    body:    params.toString()
+  }).catch(err => console.error("Error guardando:", err));
 
-  // ... resto del modal final
-}
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-    .then(res => res.json())
-    .then(res => console.log("Guardado en Sheets:", res))
-    .catch(err => console.error("Error guardando en Sheets:", err));
-
-  const asunto = "Rifa Solidaria - Número " + seleccionado;
-  const mensaje = `Hola, reservé el número ${seleccionado}.\nEmail: ${email}`;
-  const mailLink = `mailto:estudiantesuniversales@gmail.com?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(mensaje)}`;
-  document.getElementById('finalMailLink').href = mailLink;
+  // ✏️ CAMBIÁ: tu email en el mailto
+  const asunto  = 'Rifa Solidaria - Número ' + seleccionado;
+  const mensaje = `Hola, reservé el número ${seleccionado}.\nNombre: ${nombre}\nEmail: ${email}`;
+  document.getElementById('finalMailLink').href =
+    `mailto:estudiantesuniversales@gmail.com?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(mensaje)}`;
   document.getElementById('finalModal').classList.add('open');
 }
 
@@ -208,7 +216,7 @@ function cerrarFinal() {
   document.getElementById('finalModal').classList.remove('open');
 }
 
-document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') cerrarModal(); });
+document.getElementById('modal').addEventListener('click',      e => { if (e.target.id === 'modal')      cerrarModal();  });
 document.getElementById('finalModal').addEventListener('click', e => { if (e.target.id === 'finalModal') cerrarFinal(); });
 </script>
 
