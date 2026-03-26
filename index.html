@@ -164,20 +164,30 @@ function cerrarModal() {
 
 function confirmarAccion() {
   const email = document.getElementById('email').value.trim();
-  if (!email) { alert("Ingresá tu email"); return; }
+  const nombre = document.getElementById('nombre').value.trim();
+  if (!nombre || !email) { alert("Completá los datos"); return; }
 
   estados[seleccionado] = 'reservado';
   renderGrid();
   cerrarModal();
 
-  // ← los campos coinciden exactamente con lo que lee el Apps Script
-  const payload = {
+  const params = new URLSearchParams({
     numero: seleccionado,
     estado: 'reservado',
+    nombre: nombre,
     mail: email,
     fecha: new Date().toLocaleString('es-AR')
-  };
+  });
 
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
+  }).catch(err => console.error("Error:", err));
+
+  // ... resto del modal final
+}
   fetch(SCRIPT_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
