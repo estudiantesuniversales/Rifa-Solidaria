@@ -58,7 +58,7 @@ input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; b
 <body>
 
 <div class="header">
-  <h1>🤍 ESTUDIANTES UNIVERSALES - Rifa Solidaria</h1>
+  <h1>🤍 ESTUDIANTES UNIVERSALES  - Rifa Solidaria</h1>
   <p>Cada número vale $5000 (en pesos argentinos)</p>
 </div>
 
@@ -128,7 +128,7 @@ input { width:100%; padding:8px; margin-bottom:10px; border:1px solid #1D8787; b
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIOoZhVY5rFyWcpzwu6QPa4L-I2JtWU65wYpyqRMAlhJq9Cmu7gnmCi--ukQm-Kz6X/exec"; // reemplazar por la URL de tu Apps Script
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3wl3P-04K0K5CiYtmE4yD8JOVT-q9Fd_n4Yxr7mT96vOpgrdwt3VIZmvxhwP_N4nR/exec"; // reemplazar por la URL de tu Apps Script
 const TOTAL = 100;
 const PRECIO = 5000;
 const estados = {};
@@ -189,12 +189,13 @@ function confirmarAccion(){
   renderGrid();
   cerrarModal();
 
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify({numero: seleccionado, nombre, email})
-  }).then(res => res.json())
-    .then(res => console.log(res))
-    .catch(err => console.error("Error guardando en Sheets:", err));
+fetch(SCRIPT_URL, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ numero: seleccionado, nombre, email })
+}).then(res => res.json())
+  .then(res => console.log(res))
+  .catch(err => console.error("Error guardando en Sheets:", err));
 
   const asunto = "Rifa Solidaria";
   const mensaje = `Hola, reservé el número ${seleccionado}.\nNombre: ${nombre}`;
@@ -211,7 +212,3 @@ document.getElementById('finalModal').addEventListener('click', e => {if(e.targe
 
 </body>
 </html>
-
-
-
-
